@@ -1,4 +1,0 @@
----
-created: docs
-type: docs
----

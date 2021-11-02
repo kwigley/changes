@@ -17,7 +17,7 @@ use edit::{edit_with_builder, Builder};
 // 3. write to a unique file in `.changes`, include frontmatter
 
 // TODO: move to config
-const CHANGES_DIR: &str = ".changes/";
+const CHANGES_DIR: &str = ".test_changes/";
 
 pub fn add() -> Result<()> {
     let change_types = &[
