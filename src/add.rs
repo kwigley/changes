@@ -37,7 +37,6 @@ pub fn add() -> Result<()> {
                 .items(&change_types[..])
                 .interact()?,
         )
-        .map(|s| *s)
         .ok_or_else(|| UserInputError("Invalid change type".to_owned()))?;
 
     let now = match SystemTime::now().duration_since(UNIX_EPOCH) {
@@ -60,7 +59,7 @@ pub fn add() -> Result<()> {
                 now = now,
                 change_type = change_type
             };
-            match file.write_all((frontmatter.to_owned() + &contents).as_bytes()) {
+            match file.write_all((frontmatter + &contents).as_bytes()) {
                 Ok(_) => Ok(()),
                 Err(e) => Err(IoError(e)),
             }
