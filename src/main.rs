@@ -1,9 +1,9 @@
-use changes::Opt;
+use changes::Cli;
+use clap::Parser;
 use std::process;
-use structopt::StructOpt;
 
 fn main() {
-    let args = Opt::from_args();
+    let args = Cli::parse();
     match changes::run(args) {
         Ok(_) => process::exit(0),
         Err(e) => {
