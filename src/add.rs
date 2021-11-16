@@ -19,22 +19,44 @@ use edit::{edit_with_builder, Builder};
 // TODO: move to config
 const CHANGES_DIR: &str = ".test_changes/";
 
+const CHANGE_TYPES: [&str; 7] = [
+    "bug",
+    "feature",
+    "chore",
+    "docs",
+    "refactor",
+    "performance",
+    "test",
+];
+
+// enum ChangeType {
+//     Bug,
+//     Feature,
+//     Chore,
+//     Docs,
+//     Refactor,
+//     Performance,
+//     Test,
+// }
+
+// struct ChangeEntry {
+//     created: u64, // model as timestamp (chrono)
+//     entry_type: ChangeType,
+//     contents: String,
+// }
+
+// serialization!
+// consider json, yaml
+// use serialization to write read entries
+// https://crates.io/crates/gray_matter
+
 pub fn add() -> Result<()> {
-    let change_types = &[
-        "bug",
-        "feature",
-        "chore",
-        "docs",
-        "refactor",
-        "performance",
-        "test",
-    ];
-    let change_type = change_types
+    let change_type = CHANGE_TYPES
         .get(
             Select::with_theme(&ColorfulTheme::default())
                 .with_prompt("What type of change is this?")
                 .default(0)
-                .items(&change_types[..])
+                .items(&CHANGE_TYPES)
                 .interact()?,
         )
         .ok_or_else(|| UserInputError("Invalid change type".to_owned()))?;
@@ -65,7 +87,7 @@ pub fn add() -> Result<()> {
             // }
 
             file.write_all((frontmatter + &contents).as_bytes())
-                .or_else(|e| Err(IoError(e)))
+                .map_err(IoError)
         } else {
             // TODO: this should probably error
             Ok(())
