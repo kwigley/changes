@@ -59,10 +59,13 @@ pub fn add() -> Result<()> {
                 now = now,
                 change_type = change_type
             };
-            match file.write_all((frontmatter + &contents).as_bytes()) {
-                Ok(_) => Ok(()),
-                Err(e) => Err(IoError(e)),
-            }
+            // match file.write_all((frontmatter + &contents).as_bytes()) {
+            //     Ok(_) => Ok(()),
+            //     Err(e) => Err(IoError(e)),
+            // }
+
+            file.write_all((frontmatter + &contents).as_bytes())
+                .or_else(|e| Err(IoError(e)))
         } else {
             // TODO: this should probably error
             Ok(())
