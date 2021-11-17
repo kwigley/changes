@@ -1,7 +1,4 @@
-use crate::error::{
-    Error::{IoError, SerError, SystemTimeError, UnableToGenerateFilenameError, UserInputError},
-    Result,
-};
+use crate::error::{Error, Result};
 use dialoguer::{theme::ColorfulTheme, Select};
 use edit::{edit_with_builder, Builder};
 use names::Generator;
@@ -40,7 +37,7 @@ fn prompt_for_change_type() -> Result<String> {
 
     Ok((*CHANGE_TYPES
         .get(change_type_idx)
-        .ok_or_else(|| UserInputError("Invalid change type".to_owned()))?)
+        .ok_or_else(|| Error::UserInput("Invalid change type".to_owned()))?)
     .to_owned())
 }
 
@@ -48,23 +45,23 @@ pub fn add() -> Result<()> {
     let frontmatter = ChangeFrontMatter {
         created: SystemTime::now()
             .duration_since(UNIX_EPOCH)
-            .map_err(SystemTimeError)?
+            .map_err(Error::SystemTime)?
             .as_secs(),
         entry_type: prompt_for_change_type()?,
     };
 
     Generator::default().next().map_or_else(
-        || Err(UnableToGenerateFilenameError),
+        || Err(Error::UnableToGenerateFilename),
         |filename| {
             fs::create_dir_all(CHANGES_DIR)?;
             let filepath = CHANGES_DIR.to_owned() + &filename + ".md";
             let mut file = File::create(filepath)?;
             file.write_all(
                 serde_frontmatter::serialize(frontmatter, &edit_with_builder("", &Builder::new())?)
-                    .map_err(SerError)?
+                    .map_err(Error::Ser)?
                     .as_bytes(),
             )
-            .map_err(IoError)
+            .map_err(Error::Io)
         },
     )
 }
