@@ -2,10 +2,8 @@ mod cmds;
 mod error;
 
 use clap::Parser;
-use cmds::{add, check};
+use cmds::{add, check, generate};
 use error::Result;
-
-use crate::cmds::generate;
 
 #[derive(Parser, Debug)]
 #[clap(name = env!("CARGO_PKG_NAME"))]
