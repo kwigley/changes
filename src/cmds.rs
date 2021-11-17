@@ -67,10 +67,18 @@ pub fn add() -> Result<()> {
 }
 
 pub fn generate() -> Result<()> {
+    // will use a config to determine behavior eventually
+    // looks for files in changes dir
+    // combine, group, and sort entrys by type and timestamp
+    // eventually tie entries with GH user/PR using the current branch and GH API
+    // set header with version number and date
+    // skip "chore" or "trivial" changes
     todo!()
 }
 
 pub fn check() -> Result<()> {
+    // ensure PR/push has a changelog entry
+    // can be run in CI or in pre-commit (pre-push)
     todo!()
 }
 
