@@ -8,5 +8,6 @@ clap = "3.0.0-beta.5"
 edit = "0.1.2"
 names = { version = "0.12.0", default-features = false }
 thiserror = "1.0.30"
-indoc = "1.0.3"
 dialoguer = "0.9.0"
+serde = '1.0'
+serde-frontmatter = "0.1.0"

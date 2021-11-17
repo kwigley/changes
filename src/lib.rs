@@ -1,9 +1,11 @@
-mod add;
+mod cmds;
 mod error;
 
-use crate::add::add;
-use crate::error::Result;
 use clap::Parser;
+use cmds::{add, check};
+use error::Result;
+
+use crate::cmds::generate;
 
 #[derive(Parser, Debug)]
 #[clap(name = env!("CARGO_PKG_NAME"))]
@@ -18,7 +20,7 @@ pub fn run(cmds: Cli) -> Result<()> {
     // TODO: read config, pass to fn
     match cmds {
         Cli::Add => add(),
-        Cli::Generate => todo!(),
-        Cli::Check => todo!(),
+        Cli::Generate => generate(),
+        Cli::Check => check(),
     }
 }
