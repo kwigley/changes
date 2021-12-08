@@ -1,3 +1,6 @@
+ci:
+  skip: [fmt, cargo-check, clippy, check-github-workflows]
+
 repos:
   - repo: https://github.com/doublify/pre-commit-rust
     rev: v1.0
