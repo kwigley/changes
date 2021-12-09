@@ -7,7 +7,7 @@ fn main() {
     match changes::run(args) {
         Ok(_) => process::exit(0),
         Err(e) => {
-            println!("{:?}", e);
+            eprintln!("{}", e);
             process::exit(1)
         }
     }
