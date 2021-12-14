@@ -1,11 +1,11 @@
 use crate::error::{Error, Result};
+use chrono::prelude::*;
 use dialoguer::{theme::ColorfulTheme, Select};
 use edit::{edit_with_builder, Builder};
 use names::Generator;
 use serde::{Deserialize, Serialize};
 use std::fs::{self, File};
 use std::io::Write;
-use std::time::{SystemTime, UNIX_EPOCH};
 
 // TODO: move to config
 const CHANGES_DIR: &str = ".test_changes/";
@@ -23,7 +23,7 @@ const CHANGE_TYPES: [&str; 7] = [
 
 #[derive(Debug, Deserialize, Serialize)]
 struct ChangeFrontMatter {
-    created: u64,
+    created: DateTime<Utc>,
     #[serde(rename = "type")]
     entry_type: String,
 }
@@ -43,10 +43,7 @@ fn prompt_for_change_type() -> Result<String> {
 
 pub fn add() -> Result<()> {
     let frontmatter = ChangeFrontMatter {
-        created: SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .map_err(Error::SystemTime)?
-            .as_secs(),
+        created: Utc::now(),
         entry_type: prompt_for_change_type()?,
     };
 
@@ -88,13 +85,16 @@ mod tests {
 
     #[test]
     fn test_frontmatter_serialization() {
+        let timestamp = "2021-12-14T16:31:17.265529Z";
         let frontmatter = ChangeFrontMatter {
-            created: 1234,
+            created: DateTime::parse_from_rfc3339(timestamp)
+                .unwrap()
+                .with_timezone(&Utc),
             entry_type: "bug".to_owned(),
         };
         assert_eq!(
             serde_frontmatter::serialize(frontmatter, "test").unwrap(),
-            "---\ncreated: 1234\ntype: bug\n\n---\ntest"
+            format!("---\ncreated: \"{}\"\ntype: bug\n\n---\ntest", timestamp)
         )
     }
 }
