@@ -12,3 +12,5 @@ dialoguer = "0.9.0"
 serde = '1.0'
 serde-frontmatter = "0.1.0"
 chrono = {version="0.4", features = ["serde"]}
+strum_macros = "0.22"
+strum = { version = "0.22", features = ["derive"] }

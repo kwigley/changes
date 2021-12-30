@@ -4,22 +4,35 @@ use dialoguer::{theme::ColorfulTheme, Select};
 use edit::{edit_with_builder, Builder};
 use names::Generator;
 use serde::{Deserialize, Serialize};
+use std::fmt::{write, Display};
 use std::fs::{self, File};
 use std::io::Write;
+use strum::{EnumIter, IntoEnumIterator};
 
 // TODO: move to config
 const CHANGES_DIR: &str = ".test_changes/";
 
 // TODO: move to config
-const CHANGE_TYPES: [&str; 7] = [
-    "bug",
-    "feature",
-    "chore",
-    "docs",
-    "refactor",
-    "performance",
-    "test",
-];
+// const CHANGE_TYPES: [&str; 7] = [
+//     "bug",
+//     "feature",
+//     "chore",
+//     "docs",
+//     "refactor",
+//     "performance",
+//     "test",
+// ];
+
+#[derive(EnumIter, Debug, Deserialize, Serialize, Clone, Copy)]
+enum ChangeType {
+    Bug,
+}
+
+impl Display for ChangeType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", format!("{:?}", &self).to_lowercase())
+    }
+}
 
 #[derive(Debug, Deserialize, Serialize)]
 struct ChangeFrontMatter {
@@ -29,10 +42,11 @@ struct ChangeFrontMatter {
 }
 
 fn prompt_for_change_type() -> Result<String> {
+    let change_types = ChangeType::iter().map(|v| format!("{}", v));
     let change_type_idx = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("What type of change is this?")
         .default(0)
-        .items(&CHANGE_TYPES)
+        .items(&change_types)
         .interact()?;
 
     Ok((*CHANGE_TYPES
