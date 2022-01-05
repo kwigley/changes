@@ -4,61 +4,44 @@ use dialoguer::{theme::ColorfulTheme, Select};
 use edit::{edit_with_builder, Builder};
 use names::Generator;
 use serde::{Deserialize, Serialize};
-use std::fmt::{write, Display};
 use std::fs::{self, File};
 use std::io::Write;
-use strum::{EnumIter, IntoEnumIterator};
+use std::str::FromStr;
+use strum::{Display, EnumIter, EnumString, IntoEnumIterator};
 
-// TODO: move to config
+// TODO(kw): move to config
 const CHANGES_DIR: &str = ".test_changes/";
 
-// TODO: move to config
-// const CHANGE_TYPES: [&str; 7] = [
-//     "bug",
-//     "feature",
-//     "chore",
-//     "docs",
-//     "refactor",
-//     "performance",
-//     "test",
-// ];
-
-#[derive(EnumIter, Debug, Deserialize, Serialize, Clone, Copy)]
+#[derive(EnumIter, EnumString, Debug, Deserialize, Serialize, Clone, Copy, Display)]
+#[serde(rename_all = "lowercase")]
 enum ChangeType {
-    Bug,
-}
-
-impl Display for ChangeType {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", format!("{:?}", &self).to_lowercase())
-    }
+    Fix,
+    Feature,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 struct ChangeFrontMatter {
     created: DateTime<Utc>,
     #[serde(rename = "type")]
-    entry_type: String,
+    change_type: ChangeType,
 }
 
-fn prompt_for_change_type() -> Result<String> {
-    let change_types = ChangeType::iter().map(|v| format!("{}", v));
+fn prompt_for_change_type() -> Result<ChangeType> {
+    let change_types: Vec<String> = ChangeType::iter().map(|v| v.to_string()).collect();
     let change_type_idx = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("What type of change is this?")
         .default(0)
-        .items(&change_types)
+        .items(change_types.as_slice())
         .interact()?;
 
-    Ok((*CHANGE_TYPES
-        .get(change_type_idx)
-        .ok_or_else(|| Error::UserInput("Invalid change type".to_owned()))?)
-    .to_owned())
+    // TODO(kw): rm unwraps
+    Ok(ChangeType::from_str(change_types.get(change_type_idx).unwrap()).unwrap())
 }
 
 pub fn add() -> Result<()> {
     let frontmatter = ChangeFrontMatter {
         created: Utc::now(),
-        entry_type: prompt_for_change_type()?,
+        change_type: prompt_for_change_type()?,
     };
 
     Generator::default().next().map_or_else(
@@ -96,19 +79,21 @@ pub fn check() -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn test_frontmatter_serialization() {
-        let timestamp = "2021-12-14T16:31:17.265529Z";
-        let frontmatter = ChangeFrontMatter {
-            created: DateTime::parse_from_rfc3339(timestamp)
-                .unwrap()
-                .with_timezone(&Utc),
-            entry_type: "bug".to_owned(),
-        };
-        assert_eq!(
-            serde_frontmatter::serialize(frontmatter, "test").unwrap(),
-            format!("---\ncreated: \"{}\"\ntype: bug\n\n---\ntest", timestamp)
-        )
+    mod add {
+        use super::*;
+        #[test]
+        fn test_frontmatter_serialization() {
+            let timestamp = "2021-12-14T16:31:17.265529Z";
+            let frontmatter = ChangeFrontMatter {
+                created: DateTime::parse_from_rfc3339(timestamp)
+                    .unwrap()
+                    .with_timezone(&Utc),
+                change_type: ChangeType::Fix,
+            };
+            assert_eq!(
+                serde_frontmatter::serialize(frontmatter, "test").unwrap(),
+                format!("---\ncreated: \"{}\"\ntype: fix\n\n---\ntest", timestamp)
+            )
+        }
     }
 }
