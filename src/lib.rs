@@ -6,7 +6,7 @@ use cmds::{add, check, generate};
 use error::Result;
 
 #[derive(Parser, Debug)]
-#[clap(name = env!("CARGO_PKG_NAME"))]
+#[clap(name = env!("CARGO_PKG_NAME"), about, version, author)]
 pub enum Cli {
     /// add a changelog entry
     Add,
