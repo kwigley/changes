@@ -14,3 +14,4 @@ serde-frontmatter = "0.1.0"
 chrono = {version="0.4", features = ["serde"]}
 strum_macros = "0.23"
 strum = { version = "0.23", features = ["derive"] }
+color-eyre= '0.6'

@@ -1,14 +1,12 @@
-use changes::Cli;
+use changes::App;
 use clap::Parser;
-use std::process;
+use color_eyre::eyre::Result;
 
-fn main() {
-    let args = Cli::parse();
-    match changes::run(args) {
-        Ok(_) => process::exit(0),
-        Err(e) => {
-            eprintln!("{}", e);
-            process::exit(1)
-        }
+fn main() -> Result<()> {
+    color_eyre::install()?;
+
+    let app = App::parse();
+    if let Err(error) = app.execute() {
+        error.exit();
     }
 }
