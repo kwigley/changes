@@ -1,3 +1,4 @@
+use carli::command::Main;
 use changes::App;
 use clap::Parser;
 use color_eyre::eyre::Result;

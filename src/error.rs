@@ -14,3 +14,6 @@ pub enum Error {
     #[error("Unable to generate file name")]
     UnableToGenerateFilename,
 }
+///
+/// Result type of the core library.
+pub type Result<T> = core::result::Result<T, Error>;
