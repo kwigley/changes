@@ -10,4 +10,5 @@ fn main() -> Result<()> {
     if let Err(error) = app.execute() {
         error.exit();
     }
+    Ok(())
 }
