@@ -1,2 +1,5 @@
-/target
-/.test_changes
+.DS_Store
+
+debug/
+target/
+.test_changes/

@@ -24,18 +24,26 @@ impl Execute<App> for Subcommand {
     fn execute(&self, _context: &App) -> Result<()> {
         // This will be driven by config
         let template = r#"
-        {% if version %}
+        {%- if version -%}
             ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
         {% else %}
             ## [unreleased]
-        {% endif %}
+        {%- endif -%}
         {% for type, change in changes | group_by(attribute="type") %}
             ### {{ type | upper_first }}
-            {% for change in change %}
+            {% for change in change -%}
                 - {{ change.message | upper_first }}
-            {% endfor %}
+            {%- endfor %}
         {% endfor %}"#;
-        let template = Template::new(template.to_string())?;
+
+        let template = Template::new(
+            template
+                .lines()
+                .map(|l| l.trim())
+                .collect::<Vec<&str>>()
+                .join("\n")
+                .to_string(),
+        )?;
 
         let paths = fs::read_dir(CHANGES_DIR)?;
         let release = Release::new(
@@ -50,18 +58,21 @@ impl Execute<App> for Subcommand {
                     Ok(Change::new(
                         frontmatter.created,
                         frontmatter.change_type,
-                        message,
+                        message.trim().to_string(),
                     ))
                 })
                 .collect::<Result<Vec<Change>>>()?,
             Utc::now(),
         );
         let path = PathBuf::from("CHANGELOG.md");
+        let cl = fs::read_to_string(&path)?;
         let buf = &mut File::create(&path)?;
-        let cl = fs::read_to_string(path)?;
         let content = template.render(&release)?;
 
         write!(buf, "{}\n{}", content, cl)?;
+
+        fs::remove_dir_all(CHANGES_DIR)?;
+        fs::create_dir(CHANGES_DIR)?;
 
         Ok(())
     }
