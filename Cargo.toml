@@ -4,15 +4,18 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+carli = "0.2"
+chrono = { version = "0.4", features = ["serde"] }
 clap = { version = "3.0.5", features = ["derive"] }
+color-eyre = "0.6"
+dialoguer = "0.9.0"
 edit = "0.1.2"
 names = { version = "0.12.0", default-features = false }
-dialoguer = "0.9.0"
 serde = "1.0"
 serde-frontmatter = "0.1.0"
-chrono = { version = "0.4", features = ["serde"] }
-strum_macros = "0.23"
-strum = { version = "0.23", features = ["derive"] }
-color-eyre = "0.6"
-carli = "0.2"
+serde-semver = "0.2.1"
 semver = "1.0.4"
+strum = { version = "0.23", features = ["derive"] }
+strum_macros = "0.23"
+thiserror = "1.0.30"
+tera = "1.15.0"

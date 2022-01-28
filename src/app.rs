@@ -1,11 +1,8 @@
 use crate::subcommand;
 use carli::prelude::app::*;
-use chrono::{DateTime, Utc};
 use clap::Parser;
-use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 use std::io::{stderr, stdin, stdout};
-use strum::{Display, EnumIter, EnumString};
 
 // TODO(kw): move to config
 pub const CHANGES_DIR: &str = ".test_changes/";
@@ -47,25 +44,4 @@ impl Shared for App {
     fn output(&self) -> std::cell::RefMut<Stream> {
         self.output.borrow_mut()
     }
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct ChangeFrontMatter {
-    created: DateTime<Utc>,
-    #[serde(rename = "type")]
-    change_type: ChangeType,
-}
-
-#[derive(EnumIter, EnumString, Debug, Deserialize, Serialize, Clone, Copy, Display)]
-#[serde(rename_all = "lowercase")]
-pub enum ChangeType {
-    Fix,
-    Feature,
-    Chore,
-    Build,
-    Ci,
-    Docs,
-    Test,
-    Perf,
-    Refactor,
 }
