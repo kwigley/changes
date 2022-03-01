@@ -12,11 +12,7 @@ where
         Select::with_theme(&ColorfulTheme::default())
             .with_prompt("What type of change is this?")
             .default(0)
-            .items(
-                &items
-                    .map(|v| v.clone().to_string())
-                    .collect::<Vec<String>>(),
-            )
+            .items(&items.map(|v| v.to_string()).collect::<Vec<String>>())
             .interact()?,
     ))
 }
