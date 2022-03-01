@@ -1,47 +1,22 @@
-use crate::subcommand;
-use carli::prelude::app::*;
+use crate::error::Result;
+use crate::subcommand::Subcommand;
 use clap::Parser;
-use std::cell::RefCell;
-use std::io::{stderr, stdin, stdout};
 
-// TODO(kw): move to config
+// TODO: move to config
 pub const CHANGES_DIR: &str = ".test_changes/";
 
 #[derive(Parser, Debug)]
 #[clap(name = env!("CARGO_PKG_NAME"), about, version, author)]
 pub struct App {
-    /// The error output stream.
-    #[clap(skip = RefCell::new(stderr().into()))]
-    error: RefCell<Stream>,
-
-    /// The input stream.
-    #[clap(skip = RefCell::new(stdin().into()))]
-    input: RefCell<Stream>,
-
-    /// The global output stream.
-    #[clap(skip = RefCell::new(stdout().into()))]
-    output: RefCell<Stream>,
-
     #[clap(subcommand)]
-    command: subcommand::Subcommand,
+    command: Subcommand,
 }
 
-impl Main for App {
-    fn subcommand(&self) -> &dyn Execute<Self> {
-        &self.command
-    }
-}
-
-impl Shared for App {
-    fn error(&self) -> std::cell::RefMut<Stream> {
-        self.error.borrow_mut()
-    }
-
-    fn input(&self) -> std::cell::RefMut<Stream> {
-        self.input.borrow_mut()
-    }
-
-    fn output(&self) -> std::cell::RefMut<Stream> {
-        self.output.borrow_mut()
+impl App {
+    pub fn execute(&self) -> Result<()> {
+        match &self.command {
+            Subcommand::Add(cmd) => cmd.execute(self),
+            Subcommand::Generate(cmd) => cmd.execute(self),
+        }
     }
 }

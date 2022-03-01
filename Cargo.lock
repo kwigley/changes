@@ -107,12 +107,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "14c189c53d098945499cdfa7ecc63567cf3886b3332b312a5b4585d8d3a6a610"
 
 [[package]]
-name = "carli"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5654120759e928b09ea1ac66bc6a998d64e8297756f57f7cd27641e06b0a655b"
-
-[[package]]
 name = "cc"
 version = "1.0.72"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -128,7 +122,6 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 name = "changes"
 version = "0.1.0"
 dependencies = [
- "carli",
  "chrono",
  "clap",
  "color-eyre",
