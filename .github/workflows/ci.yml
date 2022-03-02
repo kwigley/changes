@@ -57,10 +57,8 @@ jobs:
           profile: minimal
           override: true
           components: rustfmt
-      - name: 💰 Cache
-        uses: Swatinem/rust-cache@v1
       - name: ⌨️ Fmt
         uses: actions-rs/cargo@v1
         with:
           command: fmt
-          args: --check
+          args: --all -- --check --verbose
