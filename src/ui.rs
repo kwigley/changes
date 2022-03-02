@@ -11,7 +11,8 @@ pub fn select_input<T: Display>(options: &[T]) -> Result<&T> {
         .default(0)
         .items(options)
         .interact()?;
-    options
+    let selected = options
         .get(idx)
-        .ok_or_else(|| Error::InvalidChangeType("None".to_owned()))
+        .ok_or_else(|| Error::InvalidChangeType("None".to_owned()))?;
+    Ok(selected)
 }
