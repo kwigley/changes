@@ -1,4 +1,4 @@
-[![CI](https://github.com/kwigley/changes/actions/workflows/ci.yml/badge.svg)](https://github.com/kwigley/changes/actions/workflows/ci.yml)
+[![ci](https://github.com/kwigley/changes/actions/workflows/ci.yml/badge.svg)](https://github.com/kwigley/changes/actions/workflows/ci.yml)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/kwigley/changes/main.svg)](https://results.pre-commit.ci/latest/github/kwigley/changes/main)
 
 # changes
