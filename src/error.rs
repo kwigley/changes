@@ -1,6 +1,7 @@
 use thiserror::Error as ThisError;
 
 #[derive(Debug, ThisError)]
+#[allow(clippy::enum_variant_names)]
 pub enum Error {
     #[error("IO error: `{0}`")]
     Io(#[from] std::io::Error),
@@ -10,12 +11,12 @@ pub enum Error {
     UnableToGenerateFilename,
     #[error("Template parse error:\n{0}")]
     TemplateParseError(String),
-    /// Error that may occur while rendering the template.
     #[error("Template render error:\n{0}")]
     TemplateRenderError(String),
-    /// Error that may occur during more general template operations.
     #[error("Template error: `{0}`")]
     TemplateError(#[from] tera::Error),
+    #[error("Invalid change type: `{0}`")]
+    InvalidChangeType(String),
 }
 
 pub type Result<T> = core::result::Result<T, Error>;

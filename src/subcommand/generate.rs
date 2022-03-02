@@ -2,11 +2,11 @@ use crate::{
     app::CHANGES_DIR,
     change::{Change, ChangeFrontMatter},
     error::Error,
+    error::Result,
     release::Release,
     template::Template,
     App,
 };
-use carli::prelude::cmd::*;
 use chrono::Utc;
 use semver::Version;
 use std::io::Write;
@@ -20,8 +20,8 @@ pub struct Subcommand {
     version: Version,
 }
 
-impl Execute<App> for Subcommand {
-    fn execute(&self, _context: &App) -> Result<()> {
+impl Subcommand {
+    pub fn execute(&self, _context: &App) -> Result<()> {
         // This will be driven by config
         let template = r#"
         {%- if version -%}
@@ -41,8 +41,7 @@ impl Execute<App> for Subcommand {
                 .lines()
                 .map(|l| l.trim())
                 .collect::<Vec<&str>>()
-                .join("\n")
-                .to_string(),
+                .join("\n"),
         )?;
 
         let paths = fs::read_dir(CHANGES_DIR)?;
@@ -54,7 +53,7 @@ impl Execute<App> for Subcommand {
                         serde_frontmatter::deserialize::<ChangeFrontMatter>(&fs::read_to_string(
                             path?.path(),
                         )?)
-                        .map_err(|e| Error::Ser(e))?;
+                        .map_err(Error::Ser)?;
                     Ok(Change::new(
                         frontmatter.created,
                         frontmatter.change_type,

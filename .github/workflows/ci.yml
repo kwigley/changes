@@ -26,7 +26,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
-  clippy:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: 📂 Checkout code
@@ -41,11 +41,11 @@ jobs:
       - name: 💰 Cache
         uses: Swatinem/rust-cache@v1
       - name: 📎 Clippy
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/clippy-check@v1
         with:
-          command: clippy
+          token: ${{ secrets.GITHUB_TOKEN }}
           args: -- -D warnings
-  rustfmt:
+  format:
     runs-on: ubuntu-latest
     steps:
       - name: 📂 Checkout code
@@ -57,10 +57,8 @@ jobs:
           profile: minimal
           override: true
           components: rustfmt
-      - name: 💰 Cache
-        uses: Swatinem/rust-cache@v1
       - name: ⌨️ Fmt
         uses: actions-rs/cargo@v1
         with:
           command: fmt
-          args: --check
+          args: --all -- --check --verbose

@@ -22,7 +22,6 @@ impl Template {
         tera.register_filter("upper_first", Self::upper_first_filter);
         Ok(Self { tera })
     }
-
     /// Filter for making the first character of a string uppercase.
     fn upper_first_filter(value: &Value, _: &HashMap<String, Value>) -> TeraResult<Value> {
         let mut s = tera::try_get_value!("upper_first_filter", "value", String, value);

@@ -4,7 +4,7 @@ use strum::{Display, EnumIter, EnumString};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Change {
-    timestamp: DateTime<Utc>,
+    created: DateTime<Utc>,
     #[serde(rename = "type")]
     change_type: ChangeType,
     message: String,
@@ -13,7 +13,7 @@ pub struct Change {
 impl Change {
     pub fn new(created: DateTime<Utc>, change_type: ChangeType, message: String) -> Self {
         Self {
-            timestamp: created,
+            created,
             change_type,
             message,
         }
