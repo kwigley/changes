@@ -26,7 +26,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
-  clippy:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: 📂 Checkout code
@@ -45,7 +45,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: -- -D warnings
-  rustfmt:
+  format:
     runs-on: ubuntu-latest
     steps:
       - name: 📂 Checkout code
