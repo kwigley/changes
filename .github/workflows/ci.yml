@@ -41,9 +41,9 @@ jobs:
       - name: 💰 Cache
         uses: Swatinem/rust-cache@v1
       - name: 📎 Clippy
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/clippy-check@v1
         with:
-          command: clippy
+          token: ${{ secrets.GITHUB_TOKEN }}
           args: -- -D warnings
   rustfmt:
     runs-on: ubuntu-latest
