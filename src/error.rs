@@ -15,6 +15,8 @@ pub enum Error {
     TemplateRenderError(String),
     #[error("Template error: `{0}`")]
     TemplateError(#[from] tera::Error),
+    #[error("Invalid change type: `{0}`")]
+    InvalidChangeType(String),
 }
 
 pub type Result<T> = core::result::Result<T, Error>;

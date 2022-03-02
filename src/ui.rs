@@ -1,34 +1,18 @@
+use std::fmt::Display;
+
 use dialoguer::theme::ColorfulTheme;
 use dialoguer::Select;
 
-use crate::error::Result;
+use crate::error::{Error, Result};
 
-pub fn select_input<T, I>(items: I) -> Result<Option<T>>
-where
-    T: ToString + Copy,
-    I: IntoIterator<Item = T> + Clone,
-{
-    Ok(items.clone().into_iter().nth(
-        Select::with_theme(&ColorfulTheme::default())
-            .with_prompt("What type of change is this?")
-            .default(0)
-            .items(
-                &items
-                    .into_iter()
-                    .map(|v| v.to_string())
-                    .collect::<Vec<String>>(),
-            )
-            .interact()?,
-    ))
-}
-
-#[cfg(test)]
-mod test {
-    use super::*;
-
-    #[test]
-    fn test_select_input() -> Result<()> {
-        select_input(vec!["option1", "option2"])?;
-        Ok(())
-    }
+pub fn select_input<T: Display>(options: &[T]) -> Result<&T> {
+    let idx = Select::with_theme(&ColorfulTheme::default())
+        .with_prompt("What type of change is this?")
+        .default(0)
+        .items(options)
+        .interact()?;
+    let selected = options
+        .get(idx)
+        .ok_or_else(|| Error::InvalidChangeType("None".to_owned()))?;
+    Ok(selected)
 }

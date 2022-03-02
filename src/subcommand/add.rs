@@ -16,8 +16,10 @@ pub struct Subcommand {}
 
 impl Subcommand {
     pub fn execute(&self, _context: &App) -> Result<()> {
-        let frontmatter =
-            ChangeFrontMatter::new(Utc::now(), select_input(ChangeType::iter())?.unwrap());
+        let frontmatter = ChangeFrontMatter::new(
+            Utc::now(),
+            *select_input(&ChangeType::iter().collect::<Vec<_>>())?,
+        );
 
         // mkdir -p the directory to write a changes entry to
         Ok(fs::create_dir_all(CHANGES_DIR).and(Ok(File::create(
