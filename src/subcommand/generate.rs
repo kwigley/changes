@@ -1,11 +1,10 @@
 use crate::{
-    app::CHANGES_DIR,
     change::{Change, ChangeFrontMatter},
     error::Error,
     error::Result,
     release::Release,
     template::Template,
-    App,
+    Cli, CHANGES_DIR,
 };
 use chrono::Utc;
 use semver::Version;
@@ -21,7 +20,7 @@ pub struct Subcommand {
 }
 
 impl Subcommand {
-    pub fn execute(&self, _context: &App) -> Result<()> {
+    pub fn execute(&self, _context: &Cli) -> Result<()> {
         // This will be driven by config
         let template = r#"
         {%- if version -%}
@@ -56,8 +55,8 @@ impl Subcommand {
                         .map_err(Error::Ser)?;
                     Ok(Change::new(
                         frontmatter.created,
-                        frontmatter.change_type,
-                        message.trim().to_string(),
+                        &frontmatter.change_type,
+                        message.trim(),
                     ))
                 })
                 .collect::<Result<Vec<Change>>>()?,

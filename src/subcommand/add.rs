@@ -4,21 +4,20 @@ use std::io::Write;
 use chrono::Utc;
 use edit::{edit_with_builder, Builder};
 use names::Generator;
-use strum::IntoEnumIterator;
 
-use crate::app::{App, CHANGES_DIR};
-use crate::change::{ChangeFrontMatter, ChangeType};
+use crate::change::{ChangeFrontMatter, DEFAULT_CHANGELOG_EXT, DEFAULT_CHANGE_KINDS};
+use crate::cli::{select_input, Cli};
 use crate::error::{Error, Result};
-use crate::ui::select_input;
+use crate::CHANGES_DIR;
 
 #[derive(clap::Parser, Debug)]
 pub struct Subcommand {}
 
 impl Subcommand {
-    pub fn execute(&self, _context: &App) -> Result<()> {
+    pub fn execute(&self, _context: &Cli) -> Result<()> {
         let frontmatter = ChangeFrontMatter::new(
             Utc::now(),
-            *select_input(&ChangeType::iter().collect::<Vec<_>>())?,
+            *select_input(&DEFAULT_CHANGE_KINDS, "replace me".to_owned())?, //context.prompt)?,
         );
 
         // mkdir -p the directory to write a changes entry to
@@ -27,7 +26,7 @@ impl Subcommand {
                 + &Generator::default()
                     .next()
                     .ok_or(Error::UnableToGenerateFilename)?
-                + ".md",
+                + DEFAULT_CHANGELOG_EXT,
         )?
         .write_all(
             serde_frontmatter::serialize(frontmatter, &edit_with_builder("", &Builder::new())?)
@@ -49,7 +48,7 @@ mod tests {
             DateTime::parse_from_rfc3339(timestamp)
                 .unwrap()
                 .with_timezone(&Utc),
-            ChangeType::Fix,
+            "fix",
         );
         assert_eq!(
             serde_frontmatter::serialize(frontmatter, "test").unwrap(),
