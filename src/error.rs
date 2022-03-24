@@ -17,6 +17,8 @@ pub enum Error {
     TemplateError(#[from] tera::Error),
     #[error("Invalid change type: `{0}`")]
     InvalidChangeType(String),
+    #[error("Cannot parse config: `{0}`")]
+    ConfigError(#[from] config::ConfigError),
 }
 
 pub type Result<T> = core::result::Result<T, Error>;
