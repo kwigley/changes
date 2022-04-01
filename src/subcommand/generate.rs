@@ -1,6 +1,5 @@
 use crate::{
     change::{Change, ChangeFrontMatter},
-    cli::Config,
     error::Error,
     error::Result,
     release::Release,
@@ -21,7 +20,7 @@ pub struct Subcommand {
 }
 
 impl Subcommand {
-    pub fn execute(&self, _config: &Config) -> Result<()> {
+    pub fn execute(&self) -> Result<()> {
         // This will be driven by config
         let template = r#"
         {%- if version -%}
