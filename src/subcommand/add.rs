@@ -6,7 +6,7 @@ use edit::{edit_with_builder, Builder};
 use names::Generator;
 
 use crate::change::{ChangeFrontMatter, DEFAULT_CHANGELOG_EXT, DEFAULT_CHANGE_KINDS};
-use crate::cli::{select_input, Cli};
+use crate::cli::select_input;
 use crate::error::{Error, Result};
 use crate::CHANGES_DIR;
 
@@ -14,10 +14,10 @@ use crate::CHANGES_DIR;
 pub struct Subcommand {}
 
 impl Subcommand {
-    pub fn execute(&self, _context: &Cli) -> Result<()> {
+    pub fn execute(&self, prompt: &str) -> Result<()> {
         let frontmatter = ChangeFrontMatter::new(
             Utc::now(),
-            *select_input(&DEFAULT_CHANGE_KINDS, "replace me".to_owned())?, //context.prompt)?,
+            *select_input(&DEFAULT_CHANGE_KINDS, prompt.to_string())?, //context.prompt)?,
         );
 
         // mkdir -p the directory to write a changes entry to

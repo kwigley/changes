@@ -4,7 +4,7 @@ use crate::{
     error::Result,
     release::Release,
     template::Template,
-    Cli, CHANGES_DIR,
+    CHANGES_DIR,
 };
 use chrono::Utc;
 use semver::Version;
@@ -20,7 +20,7 @@ pub struct Subcommand {
 }
 
 impl Subcommand {
-    pub fn execute(&self, _context: &Cli) -> Result<()> {
+    pub fn execute(&self) -> Result<()> {
         // This will be driven by config
         let template = r#"
         {%- if version -%}
