@@ -21,6 +21,6 @@ repos:
     hooks:
       - id: prettier
   - repo: https://github.com/sirosen/check-jsonschema
-    rev: 0.16.2
+    rev: 0.17.1
     hooks:
       - id: check-github-workflows
