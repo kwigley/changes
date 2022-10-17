@@ -18,7 +18,7 @@ semver = "1.0"
 strum = { version = "0.24", features = ["derive"] }
 strum_macros = "0.24"
 thiserror = "1.0"
-tera = "1.15"
+tera = "1.17"
 
 [dependencies.config]
 version = "0.13"
