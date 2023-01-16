@@ -26,5 +26,5 @@ default-features = false
 features = ["toml", "yaml"]
 
 [dependencies.rust-embed]
-version = "6.3"
+version = "6.4"
 features = ["debug-embed"]
