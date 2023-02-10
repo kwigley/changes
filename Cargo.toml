@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 chrono = { version = "0.4", features = ["serde"] }
-clap = { version = "3.2", features = ["derive", "env", "wrap_help"] }
+clap = { version = "4.1", features = ["derive", "env", "wrap_help"] }
 color-eyre = "0.6"
 dialoguer = "0.10"
 dirs-next = "2.0"
