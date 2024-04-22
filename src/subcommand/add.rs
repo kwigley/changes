@@ -6,23 +6,22 @@ use edit::{edit_with_builder, Builder};
 use names::Generator;
 
 use crate::change::{ChangeFrontMatter, DEFAULT_CHANGELOG_EXT, DEFAULT_CHANGE_KINDS};
-use crate::cli::select_input;
+use crate::cli::{select_input, Config};
 use crate::error::{Error, Result};
-use crate::CHANGES_DIR;
 
 #[derive(clap::Parser, Debug)]
 pub struct Subcommand {}
 
 impl Subcommand {
-    pub fn execute(&self, prompt: &str) -> Result<()> {
+    pub fn execute(&self, config: &Config) -> Result<()> {
         let frontmatter = ChangeFrontMatter::new(
             Utc::now(),
-            *select_input(&DEFAULT_CHANGE_KINDS, prompt.to_string())?, //context.prompt)?,
+            select_input(&DEFAULT_CHANGE_KINDS, config.prompt.to_string())?, //context.prompt)?,
         );
 
         // mkdir -p the directory to write a changes entry to
-        Ok(fs::create_dir_all(CHANGES_DIR).and(Ok(File::create(
-            CHANGES_DIR.to_owned()
+        Ok(fs::create_dir_all(&config.changes_dir).and(Ok(File::create(
+            config.changes_dir.to_owned()
                 + &Generator::default()
                     .next()
                     .ok_or(Error::UnableToGenerateFilename)?

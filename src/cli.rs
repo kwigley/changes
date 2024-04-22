@@ -12,6 +12,7 @@ use crate::DEFAULT_CONFIG;
 struct ConfigFile {
     #[serde(default)]
     prompt: Option<String>,
+    changes_dir: Option<String>,
 }
 
 impl ConfigFile {
@@ -27,12 +28,14 @@ impl ConfigFile {
 
 pub struct Config {
     pub prompt: String,
+    pub changes_dir: String,
 }
 
 impl ::std::default::Default for Config {
     fn default() -> Self {
         Self {
             prompt: "What type of change is this?".to_string(),
+            changes_dir: ".changes".to_string(),
         }
     }
 }
@@ -40,7 +43,8 @@ impl ::std::default::Default for Config {
 impl From<ConfigFile> for Config {
     fn from(c: ConfigFile) -> Self {
         Config {
-            prompt: c.prompt.unwrap_or(Config::default().prompt),
+            prompt: c.prompt.clone().unwrap_or(Config::default().prompt),
+            changes_dir: c.prompt.unwrap_or(Config::default().changes_dir),
         }
     }
 }
@@ -65,13 +69,13 @@ impl Cli {
         let config = if self.config_path.exists() {
             Config::from(ConfigFile::parse(&self.config_path)?)
         } else {
-            // TODO: display error that config file is missing
-            todo!()
+            println!("Config file not found. Using defaults.");
+            Config::default()
         };
 
         match &self.command {
-            Subcommand::Add(cmd) => cmd.execute(&config.prompt),
-            Subcommand::Generate(cmd) => cmd.execute(),
+            Subcommand::Add(cmd) => cmd.execute(&config),
+            Subcommand::Generate(cmd) => cmd.execute(&config),
         }
     }
 }

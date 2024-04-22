@@ -1,10 +1,10 @@
 use crate::{
     change::{Change, ChangeFrontMatter},
+    cli::Config,
     error::Error,
     error::Result,
     release::Release,
     template::Template,
-    CHANGES_DIR,
 };
 use chrono::Utc;
 use semver::Version;
@@ -20,7 +20,7 @@ pub struct Subcommand {
 }
 
 impl Subcommand {
-    pub fn execute(&self) -> Result<()> {
+    pub fn execute(&self, config: &Config) -> Result<()> {
         // This will be driven by config
         let template = r#"
         {%- if version -%}
@@ -43,7 +43,7 @@ impl Subcommand {
                 .join("\n"),
         )?;
 
-        let paths = fs::read_dir(CHANGES_DIR)?;
+        let paths = fs::read_dir(&config.changes_dir)?;
         let release = Release::new(
             self.version.clone(),
             paths
@@ -69,8 +69,8 @@ impl Subcommand {
 
         write!(buf, "{}\n{}", content, cl)?;
 
-        fs::remove_dir_all(CHANGES_DIR)?;
-        fs::create_dir(CHANGES_DIR)?;
+        fs::remove_dir_all(&config.changes_dir)?;
+        fs::create_dir(&config.changes_dir)?;
 
         Ok(())
     }
