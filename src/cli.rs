@@ -56,10 +56,10 @@ pub struct Cli {
     command: Subcommand,
     #[clap(
         name = "config",
-    	short,
-    	long,
-    	value_name = "PATH",
-    	default_value = DEFAULT_CONFIG,
+        short,
+        long,
+        value_name = "PATH",
+        default_value = DEFAULT_CONFIG,
     )]
     config_path: PathBuf,
 }
@@ -81,6 +81,7 @@ impl Cli {
 }
 
 pub fn select_input<T: Display>(choices: &[T], prompt: String) -> Result<&T> {
+    let test = "asdf";
     let idx = Select::with_theme(&ColorfulTheme::default())
         .with_prompt(prompt)
         .items(choices)
