@@ -54,8 +54,7 @@ impl From<ConfigFile> for Config {
 pub struct Cli {
     #[clap(subcommand)]
     command: Subcommand,
-    #[clap(
-        name = "config",
+    #[clap(name = "config",
     	short,
     	long,
     	value_name = "PATH",
@@ -81,6 +80,7 @@ impl Cli {
 }
 
 pub fn select_input<T: Display>(choices: &[T], prompt: String) -> Result<&T> {
+    let test = "asdf";
     let idx = Select::with_theme(&ColorfulTheme::default())
         .with_prompt(prompt)
         .items(choices)
