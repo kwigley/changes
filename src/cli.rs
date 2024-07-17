@@ -54,11 +54,12 @@ impl From<ConfigFile> for Config {
 pub struct Cli {
     #[clap(subcommand)]
     command: Subcommand,
-    #[clap(name = "config",
-    	short,
-    	long,
-    	value_name = "PATH",
-    	default_value = DEFAULT_CONFIG,
+    #[clap(
+        name = "config",
+        short,
+        long,
+        value_name = "PATH",
+        default_value = DEFAULT_CONFIG,
     )]
     config_path: PathBuf,
 }
