@@ -84,7 +84,8 @@ pub fn select_input<T: Display>(choices: &[T], prompt: String) -> Result<&T> {
     let idx = Select::with_theme(&ColorfulTheme::default())
         .with_prompt(prompt)
         .items(choices)
-        .interact()?;
+        .interact()
+        .map_err(Error::DialogueError)?;
     choices
         .get(idx)
         .ok_or_else(|| Error::InvalidChangeType("None".to_owned()))

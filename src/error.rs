@@ -19,6 +19,8 @@ pub enum Error {
     InvalidChangeType(String),
     #[error("Cannot parse config: `{0}`")]
     ConfigError(#[from] config::ConfigError),
+    #[error("Unable to get input: `{0}`")]
+    DialogueError(dialoguer::Error),
 }
 
 pub type Result<T> = core::result::Result<T, Error>;
